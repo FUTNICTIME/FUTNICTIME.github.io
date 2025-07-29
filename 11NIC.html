@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>11NIC – Adivina la Formación</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+    h1 { margin-bottom: 10px; }
+
+    .field {
+      width: 600px;
+      height: 400px;
+      background: url('formacion.png') no-repeat center/cover;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .pos {
+      position: absolute;
+      width: 107px;
+      height: 21px;
+      background: rgb(112 164 245 / 80%);
+      border: 2px solid #0d4acd;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9em;
+      text-align: center;
+    }
+
+    .pos .label {
+      position: absolute;
+      bottom: 2px;
+      font-size: 0.7em;
+      color: #0033A0;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .done {
+      background: #0033A0 !important;
+      color: white !important;
+    }
+
+    /* Posiciones sobre la imagen (ajusta top/left según necesites) */
+    #GK  {top: 361px;left: 253px;}
+    #LD  {top: 320px;left: 43px;}
+    #CD1 {top: 320px;left: 163px;}
+    #CD2 {top: 320px;left: 335px;}
+    #LI  {top: 320px;left: 457px;}
+    #MI  {top: 197px;left: 73px;}
+    #MC1 {top: 220px;left: 191px;}
+    #MC2 {top: 220px;left: 320px;}
+    #MD  {top: 194px;left: 430px;}
+    #ST1 {top: 102px;left: 191px;}
+    #ST2 {top: 102px;left: 322px;}
+
+    #controls {
+      text-align: center;
+    }
+
+    #player {
+      padding: 8px;
+      font-size: 16px;
+      width: 260px;
+    }
+
+    #btn {
+      padding: 8px 16px;
+      font-size: 16px;
+      margin-left: 10px;
+      background: #0033A0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #btn:hover {
+      background: #002070;
+    }
+
+    #timer {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>11NIC – Nicaragua vs Haití 2017</h1>
+  <div class="field">
+    <div class="pos" id="GK"><div class="label">Po</div></div>
+    <div class="pos" id="LD"><div class="label">LD</div></div>
+    <div class="pos" id="CD1"><div class="label">DC1</div></div>
+    <div class="pos" id="CD2"><div class="label">DC2</div></div>
+    <div class="pos" id="LI"><div class="label">LI</div></div>
+    <div class="pos" id="MI"><div class="label">MI</div></div>
+    <div class="pos" id="MC1"><div class="label">MC1</div></div>
+    <div class="pos" id="MC2"><div class="label">MC2</div></div>
+    <div class="pos" id="MD"><div class="label">MD</div></div>
+    <div class="pos" id="ST1"><div class="label">ST1</div></div>
+    <div class="pos" id="ST2"><div class="label">ST2</div></div>
+  </div>
+
+  <div id="controls">
+    <input id="player" placeholder="Nombre del jugador" autofocus />
+    <button id="btn">Adivinar</button>
+    <div id="timer">03:00</div>
+  </div>
+
+  <script>
+    const formation = {
+      GK:'Diedrich Tellez',
+      LD:'Josue Quijano',
+      LI:'Manuel Rosas',
+      CD1:'Jason Casco',
+      CD2:'Luis Copete',
+      MD:'Juan Barrera',
+      MC1:'Marlon Lopez',
+      MC2:'Luis Galeano',
+      MI:'Carlos Chavarria',
+      ST1:'Dani Cadena',
+      ST2:'Eulises Pavon'
+    };
+
+    let secs = 180;
+    const timerEl = document.getElementById('timer');
+    const input = document.getElementById('player');
+    const btn = document.getElementById('btn');
+
+    const timerId = setInterval(() => {
+      const m = String(Math.floor(secs / 60)).padStart(2, '0');
+      const s = String(secs % 60).padStart(2, '0');
+      timerEl.textContent = `${m}:${s}`;
+      if (secs <= 0) {
+        clearInterval(timerId);
+        input.disabled = true;
+        btn.disabled = true;
+      }
+      secs--;
+    }, 1000);
+
+    function normalize(str) {
+      return str.normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase().trim();
+    }
+
+    function cap(name) {
+      return name.split(' ')
+                .map(w => w[0].toUpperCase() + w.slice(1))
+                .join(' ');
+    }
+
+    function attempt() {
+      const val = normalize(input.value);
+      input.value = '';
+      if (!val) return;
+      for (const [id, name] of Object.entries(formation)) {
+        const el = document.getElementById(id);
+        if (!el.classList.contains('done')) {
+          const norm = normalize(name);
+          const parts = norm.split(' ');
+          if (norm === val || parts.includes(val)) {
+            el.textContent = cap(name);
+            el.classList.add('done');
+            break;
+          }
+        }
+      }
+      if (document.querySelectorAll('.done').length === 11) {
+        clearInterval(timerId);
+      }
+    }
+
+    btn.addEventListener('click', attempt);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') attempt();
+    });
+  </script>
+</body>
+</html>
