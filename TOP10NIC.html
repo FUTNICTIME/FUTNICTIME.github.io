@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Top 10 Jugadores – Nicaragua</title>
+  <style>
+    body { 
+      font-family: sans-serif; 
+      background: #f0f0f0; 
+      text-align: center; 
+      padding: 20px; 
+    }
+    h1 { margin-bottom: 10px; font-size: 1.5rem; }
+    #slots { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 8px; 
+      margin: 20px 0; 
+    }
+    .slot { 
+      width: 200px;   /* Aumentamos el ancho */
+      height: 40px;   /* Reducimos el alto */
+      border: 2px solid #333; 
+      border-radius: 5px;
+      line-height: 40px; /* Alineamos el texto verticalmente */
+      font-size: 0.9rem; /* Reducimos el tamaño de la fuente */
+      text-transform: capitalize; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    .correct { 
+      background: #4CAF50; 
+      color: #fff; 
+    }
+    input { 
+      padding: 6px; 
+      font-size: 0.9rem; /* Reducimos el tamaño de la fuente del input */
+      width: 200px; 
+    }
+    button { 
+      padding: 6px 12px; 
+      font-size: 0.9rem; /* Reducimos el tamaño del botón */
+      margin: 10px; 
+    }
+    .timer { 
+      font-size: 1rem; 
+      margin: 10px; 
+    }
+  </style>
+</head>
+<body>
+
+<h1>Top 10 Jugadores con más partidos jugados en la selección – Nicaragua</h1>
+<div id="slots"></div>
+<div>
+  <input type="text" id="answerInput" placeholder="Escribe un nombre o apellido">
+  <button id="checkBtn">Comprobar</button>
+</div>
+<div class="timer">Tiempo: <span id="time">180</span>s</div>
+<button id="surrenderBtn" disabled>Rendirse</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Lista de jugadores
+  const players = [
+    { fullName: "josué quijano", firstName: "josué", lastName: "quijano" },
+    { fullName: "juan barrera", firstName: "juan", lastName: "barrera" },
+    { fullName: "manuel rosas", firstName: "manuel", lastName: "rosas" },
+    { fullName: "david solórzano", firstName: "david", lastName: "solórzano" },
+    { fullName: "carlos chavarría", firstName: "carlos", lastName: "chavarría" },
+    { fullName: "byron bonilla", firstName: "byron", lastName: "bonilla" },
+    { fullName: "marlon lópez", firstName: "marlon", lastName: "lópez" },
+    { fullName: "luis copete", firstName: "luis", lastName: "copete" },
+    { fullName: "denis espinoza", firstName: "denis", lastName: "espinoza" },
+    { fullName: "luis galeano", firstName: "luis", lastName: "galeano" }
+  ];
+
+  const slots = [];
+  let guessed = new Set(), timeLeft = 180, timer;
+
+  const slotsContainer = document.getElementById('slots'),
+        input = document.getElementById('answerInput'),
+        btn = document.getElementById('checkBtn'),
+        timeDisplay = document.getElementById('time'),
+        surrender = document.getElementById('surrenderBtn');
+
+  players.forEach((_, i) => {
+    const div = document.createElement('div');
+    div.className = 'slot';
+    div.id = 'slot' + i;
+    div.textContent = i + 1;  // Añadimos el número del recuadro
+    slotsContainer.appendChild(div);
+    slots.push(div);
+  });
+
+  function normalize(str) {
+    return str.normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  }
+
+  function startTimer(){
+    timer = setInterval(()=>{
+      timeLeft--;
+      timeDisplay.textContent = timeLeft;
+      if(timeLeft<=0){
+        clearInterval(timer);
+        surrenderGame();
+      }
+    },1000);
+  }
+
+  function checkAnswer(){
+    const val = normalize(input.value);
+    if (!val) return;
+
+    players.forEach((player, i) => {
+      // Validar si el primer nombre o el apellido coincide
+      const firstMatch = normalize(player.firstName);
+      const lastMatch = normalize(player.lastName);
+      if ((val === firstMatch || val === lastMatch) && !guessed.has(player.fullName)) {
+        guessed.add(player.fullName);
+        slots[i].textContent = player.fullName; // Mostrar nombre completo
+        slots[i].classList.add('correct');
+      }
+    });
+
+    input.value = ''; input.focus();
+    if (guessed.size === players.length) {
+      clearInterval(timer);
+      alert('¡Completaste todos los jugadores!');
+      btn.disabled = true;
+      surrender.disabled = true;
+    }
+  }
+
+  function surrenderGame() {
+    players.forEach((player, i) => {
+      slots[i].textContent = player.fullName;
+      slots[i].classList.add('correct');
+    });
+    clearInterval(timer);
+    btn.disabled = true;
+    surrender.disabled = true;
+    alert('Te rendiste. Se mostraron todos.');
+  }
+
+  btn.addEventListener('click', checkAnswer);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+  surrender.addEventListener('click', surrenderGame);
+
+  surrender.disabled = false;
+  startTimer();
+});
+</script>
+</body>
+</html>

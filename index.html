@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FUTNICTIME</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #B0C4DE 30%, #FFFFFF 100%);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 4rem;
+      letter-spacing: 0.1em;
+      background: rgba(255,255,255,0.6);
+      padding: 0.5em 1em;
+      border-radius: 8px;
+      color: #222;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      width: 90%;
+      max-width: 800px;
+      margin-top: 2rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .card img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+    }
+    .card h2 {
+      margin: 0.5rem 0;
+      font-size: 1.2rem;
+      padding: 0 0.5rem 1rem;
+    }
+  </style>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>FUTNICTIME – Portal</title>
+  <style>
+    /* Estilos simples para tarjetas */
+    body { font-family: sans-serif; background: #f0f0f0; text-align: center; padding: 50px; }
+    .card { display: inline-block; margin: 10px; padding: 30px; background: #fff; border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); font-size: 1.2rem; cursor: pointer; }
+    a { text-decoration: none; color: inherit; }
+    .card:hover { background: #e0f7fa; }
+  </style>
+</head>
+<body>
+  <h1>FUTNICTIME</h1>
+  <p>Bienvenido al portal de juegos</p>
+
+  <a href="ADIVINA EL JUGADOR.html">
+    <div class="card">ADIVINA EL JUGADOR</div>
+  </a>
+<a href="TOP10NIC.html">
+  <div class="card">TOP10NIC</div>
+</a>
+
+
+  <!-- Aquí luego podrías agregar más enlaces a más juegos -->
+</body>
+</html>
