@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Adivina el Jugador</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f3f3f3;
+    }
+    .player-image {
+      margin: 20px auto;
+      width: 150px;
+      height: 150px;
+      border: 2px solid #888;
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: white;
+    }
+    .player-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .team-grid {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .team-box {
+      width: 100px;
+      height: 100px;
+      background-color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .team-box img {
+      max-width: 100%;
+      max-height: 100%;
+      display: none;
+    }
+    .controls {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>¿Quién es el Jugador?</h1>
+
+  <!-- Recuadro con imagen del jugador -->
+  <div class="player-image">
+    <img id="playerPhoto" src="interrogacion.png" alt="Jugador Desconocido">
+  </div>
+
+  <div class="team-grid">
+    <div class="team-box"><img src="real_esteli.png" alt="Real Estelí"></div>
+    <div class="team-box"><img src="xelaju.png" alt="Xelajú"></div>
+    <div class="team-box"><img src="guastatoya.png" alt="Guastatoya"></div>
+    <div class="team-box"><img src="real_esteli.png" alt="Real Estelí (2da vez)"></div>
+    <div class="team-box"><img src="managua.png" alt="Managua FC"></div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="guess" placeholder="Escribe el nombre del jugador">
+    <button onclick="checkGuess()">Adivinar</button>
+    <button onclick="skip()">Skip</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const correctAnswer = "juan barrera";
+    let currentTeamIndex = 0;
+    const boxes = document.querySelectorAll(".team-box img");
+    const message = document.getElementById("message");
+    const playerPhoto = document.getElementById("playerPhoto");
+
+    // Mostrar el primer equipo
+    boxes[0].style.display = "block";
+
+    function checkGuess() {
+      const guess = document.getElementById("guess").value.toLowerCase().trim();
+      if (guess === correctAnswer) {
+        message.textContent = "¡Correcto! Es Juan Barrera.";
+        boxes.forEach(img => img.style.display = "block");
+        // Cambiar imagen del jugador
+        playerPhoto.src = "juan barrera.png";
+      } else {
+        skip();
+      }
+    }
+
+    function skip() {
+      if (currentTeamIndex < boxes.length - 1) {
+        currentTeamIndex++;
+        boxes[currentTeamIndex].style.display = "block";
+      } else {
+        message.textContent = "¡La respuesta era Juan Barrera!";
+        playerPhoto.src = "juan barrera.png"; // Mostrar imagen igual si se revela todo
+      }
+    }
+  </script>
+
+</body>
+</html>
